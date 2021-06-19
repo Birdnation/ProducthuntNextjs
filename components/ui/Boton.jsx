@@ -9,6 +9,7 @@ const Boton = styled.a`
   margin-right: 1rem;
   background-color: ${(props) => (props.bgColor ? "#da552f" : "white")};
   color: ${(props) => (props.bgColor ? "white" : "#000")};
+  border: 0;
 
   &:last-of-type {
     margin-right: 0;

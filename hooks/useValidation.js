@@ -29,12 +29,19 @@ const useValidation = (stateInicial, validar, fn) => {
     setSubmitForm(true);
   };
 
+  const handlerBlur = (e) => {
+    e.preventDefault();
+    const ErroresValidacion = validar(valores);
+    setErrores(ErroresValidacion);
+  };
+
   return {
     valores,
     errores,
     submitForm,
     handlerSubmit,
     handleChange,
+    handlerBlur,
   };
 };
 
