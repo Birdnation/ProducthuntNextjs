@@ -22,7 +22,7 @@ const Navegacion = () => {
       <Nav>
         <Link href="/">Inicio</Link>
         <Link href="/populares">Populares</Link>
-        <Link href="/nuevo_producto">Nuevo Producto</Link>
+        <Link href="/nuevo-producto">Nuevo Producto</Link>
       </Nav>
     </>
   );
