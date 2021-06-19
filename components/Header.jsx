@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Buscador from "./ui/Buscador";
 import Navegacion from "./Navegacion";
-import Link from "next/Link";
+import Link from "next/link";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import Boton from "./ui/Boton";

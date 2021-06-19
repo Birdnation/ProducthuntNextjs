@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import Link from "next/Link";
+import Link from "next/link";
 import styled from "@emotion/styled";
 import { FirebaseContext } from "../firebase";
 
