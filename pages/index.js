@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import Layout from "../components/Layout";
 
 export default function Home() {

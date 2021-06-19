@@ -14,7 +14,7 @@ const useValidation = (stateInicial, validar, fn) => {
       }
       setSubmitForm(false);
     }
-  }, []);
+  }, [errores]);
 
   //función que ejecuta conforme el usuario escribe
   const handleChange = (e) => {

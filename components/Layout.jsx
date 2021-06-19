@@ -12,7 +12,7 @@ const Layout = (props) => {
             --gris: #3d3d3d;
             --gris2: #6f6f6f;
             --naranja: #da552f;
-            --gris3: #e1e1e1
+            --gris3: #e1e1e1;
           }
 
           html {
@@ -38,14 +38,14 @@ const Layout = (props) => {
             line-height: 1.5;
           }
 
-          h1,h2{
-            font-family: 'Roboto-Slab, serif;
+          h1,
+          h2 {
+            font-family: "Roboto-Slab", serif;
             font-weight: 700;
-          
           }
 
-          h3{
-            font-family: 'PT Sans', sans-serif;
+          h3 {
+            font-family: "PT Sans", sans-serif;
           }
 
           ul {
@@ -57,8 +57,7 @@ const Layout = (props) => {
       />
 
       <Head>
-        <html lang="es"></html>
-        <title>Copia de productHunt</title>
+        <title>CopiaP</title>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
@@ -66,13 +65,14 @@ const Layout = (props) => {
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
         />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" key="fonts" />
         <link
           href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
         <link href="/static/css/app.css" rel="stylesheet" />
       </Head>
+
       <Header></Header>
       <main>{props.children}</main>
     </>

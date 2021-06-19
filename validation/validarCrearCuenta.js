@@ -15,8 +15,8 @@ export default function validarCrearCuenta(valores) {
 
   //validar el password
   if (!valores.password) {
-    errores.password = "La contraseña es obligatorio";
-    errores.repassword = "La contraseña es obligatorio";
+    errores.password = "La contraseña es obligatoria";
+    errores.repassword = "La contraseña es obligatoria";
   } else if (valores.password !== valores.repassword) {
     errores.password = "Las contraseñas no coinciden";
     errores.repassword = "Las contraseñas no coinciden";
