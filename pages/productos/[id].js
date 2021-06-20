@@ -89,6 +89,70 @@ const Producto = () => {
     setProducto({ ...producto, votos: nuevoTotal });
   };
 
+  //función para crear comentarios
+  const comentarioChange = (e) => {
+    setComentario({
+      ...comentario,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  //identifica si el comentario es del creador del producto
+  const esCreador = (id) => {
+    if (creador.id == id) {
+      return true;
+    }
+  };
+
+  const agregarComentario = (e) => {
+    e.preventDefault();
+
+    if (!user) {
+      return router.push("/login");
+    }
+
+    //informacion extra al comentario
+    comentario.userId = user.uid;
+    comentario.userNombre = user.displayName;
+
+    const nuevosComentarios = [...comentarios, comentario];
+
+    //actualizar bd
+    firebase.db
+      .collection("productos")
+      .doc(id)
+      .update({ comentarios: nuevosComentarios });
+
+    //actualizar state
+    setProducto({ ...producto, comentarios: nuevosComentarios });
+  };
+
+  //funcion que revisa que el creador del producto sea el mismo que esta auth
+  const puedeBorrar = () => {
+    if (!user) {
+      return false;
+    }
+    if (creador.id === user.uid) {
+      return true;
+    }
+  };
+
+  //eliminar producto de la db
+  const eliminarProducto = async () => {
+    if (!user) {
+      return router.push("/login");
+    }
+    if (creador.id !== user.uid) {
+      return router.push("/");
+    }
+    try {
+      await firebase.db.collection("productos").doc(id).delete();
+      router.push("/");
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   return (
     <Layout>
       {error ? (
@@ -129,9 +193,13 @@ const Producto = () => {
                   {user ? (
                     <>
                       <h2>Agrega tu comentario:</h2>
-                      <form>
+                      <form onSubmit={agregarComentario}>
                         <Campo>
-                          <input type="text" name="mensaje"></input>
+                          <input
+                            type="text"
+                            name="mensaje"
+                            onChange={comentarioChange}
+                          ></input>
                         </Campo>
                         <InputSubmit
                           type="submit"
@@ -147,12 +215,58 @@ const Producto = () => {
                   >
                     Comentarios
                   </h2>
-                  {comentarios.map((comentario) => (
-                    <li>
-                      <p>{comentario.nombre}</p>
-                      <p>Escrito por: {comentario.usuarioNombre}</p>
-                    </li>
-                  ))}
+                  {comentarios.length === 0 ? (
+                    <p>Aún no hay comentarios</p>
+                  ) : (
+                    <ul>
+                      {comentarios.map((comentario, i) => (
+                        <li
+                          key={`${comentario.userId}-${i}`}
+                          css={css`
+                            border: 1px solid #e1e1e1;
+                            padding: 2rem;
+                          `}
+                        >
+                          <p>{comentario.mensaje}</p>
+
+                          {esCreador(comentario.userId) ? (
+                            <>
+                              <p>
+                                Escrito por:{" "}
+                                <span
+                                  css={css`
+                                    font-weight: bold;
+                                    color: green;
+                                  `}
+                                >
+                                  {comentario.userNombre}
+                                </span>
+                              </p>
+                              <Boton
+                                bgColor={true}
+                                css={css`
+                                  display: inline-block !important;
+                                `}
+                              >
+                                Es Creador!
+                              </Boton>
+                            </>
+                          ) : (
+                            <p>
+                              Escrito por:{" "}
+                              <span
+                                css={css`
+                                  font-weight: bold;
+                                `}
+                              >
+                                {comentario.userNombre}
+                              </span>
+                            </p>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
                 <aside>
                   <Boton target="_blank" bgColor="true" href={url}>
@@ -181,6 +295,16 @@ const Producto = () => {
                   </p>
                 </aside>
               </ContenedorProducto>
+              {puedeBorrar() ? (
+                <Boton
+                  css={css`
+                    background-color: red;
+                  `}
+                  onClick={eliminarProducto}
+                >
+                  Eliminar Producto
+                </Boton>
+              ) : null}
             </>
           ),
         ]
