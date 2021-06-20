@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import React, { useState, useContext } from "react";
 import Router, { useRouter } from "next/router";
+import FileUploader from "react-firebase-file-uploader";
 import Layout from "../components/Layout";
 import {
   Formulario,
@@ -17,11 +18,18 @@ import validarCrearProducto from "../validation/validarCrearProducto";
 const STATE_INIT = {
   nombre: "",
   empresa: "",
+  urlImage: "",
   url: "",
   descripcion: "",
 };
 
 const NuevoProducto = () => {
+  //state de la imagen
+  const [imagen, setImagen] = useState("");
+  const [upload, setUpload] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [urlImage, setUrlImage] = useState("");
+
   const [error, setError] = useState(false);
   const {
     valores,
@@ -32,7 +40,7 @@ const NuevoProducto = () => {
     handlerBlur,
   } = useValidation(STATE_INIT, validarCrearProducto, crearProducto);
 
-  const { nombre, empresa, imagen, url, descripcion } = valores;
+  const { nombre, empresa, url, descripcion } = valores;
 
   //hook de routing para redireccionar
   const router = useRouter();
@@ -50,6 +58,7 @@ const NuevoProducto = () => {
       nombre,
       empresa,
       url,
+      urlImage,
       descripcion,
       votos: 0,
       comentarios: [],
@@ -60,7 +69,37 @@ const NuevoProducto = () => {
 
     //insertando en base de datos
     firebase.db.collection("productos").add(producto);
+
+    return router.push("/");
   }
+
+  const handleUploadStart = () => {
+    setProgress(0);
+    setUpload(true);
+  };
+
+  const handleProgress = (progreso) => {
+    setProgress(progreso);
+  };
+
+  const handleUploadError = (error) => {
+    setUpload(error);
+    console.log(error);
+  };
+
+  const handleUploadSuccess = (nombre) => {
+    setProgress(100);
+    setUpload(false);
+    setImagen(nombre);
+    firebase.storage
+      .ref("productos")
+      .child(nombre)
+      .getDownloadURL()
+      .then((url) => {
+        console.log(url);
+        setUrlImage(url);
+      });
+  };
   return (
     <>
       <Layout>
@@ -104,18 +143,20 @@ const NuevoProducto = () => {
             </Campo>
             {errores.empresa && <Error>{errores.empresa}</Error>}
 
-            {/* <Campo>
+            <Campo>
               <label htmlFor="imagen">Imagen</label>
-              <input
-                type="file"
+              <FileUploader
+                accept="image/*"
                 id="imagen"
                 name="imagen"
-                value={imagen}
-                onChange={handleChange}
-                onBlur={handlerBlur}
-              ></input>
+                randomizeFilename
+                storageRef={firebase.storage.ref("productos")}
+                onUploadStart={handleUploadStart}
+                onUploadError={handleUploadError}
+                onUploadSuccess={handleUploadSuccess}
+                onProgress={handleProgress}
+              ></FileUploader>
             </Campo>
-            {errores.imagen && <Error>{errores.imagen}</Error>} */}
 
             <Campo>
               <label htmlFor="url">Url</label>
