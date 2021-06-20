@@ -53,6 +53,9 @@ const Layout = (props) => {
             margin: 0;
             padding: 0;
           }
+          img {
+            width: 100%;
+          }
         `}
       />
 
